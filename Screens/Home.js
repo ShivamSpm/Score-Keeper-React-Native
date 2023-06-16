@@ -69,7 +69,7 @@ const Home = () => {
         }
     }
 
-    const incrementScore = (todos) => {
+    const incrementIndividualScore = (todos) => {
 
         todoRef
             .doc(todos.id)
@@ -82,6 +82,16 @@ const Home = () => {
             .catch(error => {
                 alert(error);
             })
+    }
+
+    const incrementAllScore = () => {
+        console.log("hrere");   
+        todoRef.get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              // Update the field for each document
+              todoRef.doc(doc.id).update({ score: firebase.firestore.FieldValue.increment(1) });
+            });
+          });
     }
 
   return (
@@ -101,9 +111,12 @@ const Home = () => {
         </TouchableOpacity>
       </View>
       <View>
-        <Text>
-            ds
-        </Text>
+        <FontAwesome
+            name='plus'
+            color='red'
+            onPress={() => incrementAllScore()}
+            style={styles.todoIcon}
+        />
       </View>
       <FlatList
             data={todos}
@@ -129,7 +142,7 @@ const Home = () => {
                         <FontAwesome
                             name='plus'
                             color='red'
-                            onPress={() => incrementScore(item)}
+                            onPress={() => incrementIndividualScore(item)}
                             style={styles.todoIcon}
                         />
 
