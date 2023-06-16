@@ -6,7 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const Detail = ({route}) => {
     const todoRef = firebase.firestore().collection('todos');
-    const [textHeading, onChangeHeadingText] = useState(route.params.item.name);
+    const [textHeading, onChangeHeadingText] = useState(route.params.item.heading);
+    const [score, onChangeScore] = useState(route.params.item.score);
     const navigation = useNavigation();
 
     const updateTodo = () => {
@@ -15,6 +16,7 @@ const Detail = ({route}) => {
         .doc(route.params.item.id)
         .update({
           heading: textHeading,
+          score: parseInt(score, 10),
         }).then(() => {
           navigation.navigate('Home')
         }).catch((error) => {
@@ -22,19 +24,31 @@ const Detail = ({route}) => {
         })
       }
     }
+
+    
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.textField}
-        onChangeText={onChangeHeadingText}
-        value={textHeading}
-        placeholder="Update Player Name"
-      />
+      <View style={styles.inputFieldsContainer}>
+        <TextInput
+          style={styles.textField}
+          onChangeText={onChangeHeadingText}
+          value={textHeading}
+          placeholder="Update Player Name"
+        />
+        <TextInput
+          style={styles.textField}
+          keyboardType='numeric'
+          onChangeText={onChangeScore}
+          value={score.toString()}
+          placeholder="Update Player Score"
+        />
+      </View>
       <Pressable
         style={styles.buttonUpdate}
         onPress={() => updateTodo()}
       >
-        <Text>UPDATE NAME</Text>
+        <Text>UPDATE</Text>
       </Pressable>
     </View>
   )
@@ -65,5 +79,10 @@ const styles = StyleSheet.create({
     borderRadius:4,
     elevation:10,
     backgroundColor:'#0de065',
+  },
+  inputFieldsContainer:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between'
   }
 })

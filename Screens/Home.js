@@ -19,7 +19,7 @@ const Home = () => {
             querySnapshot => {
                 const todos = []
                 querySnapshot.forEach((doc) =>{
-                    console.log(doc.data());
+                    // console.log(doc.data());
                     const {heading, score} = doc.data()
                     todos.push({
                         id:doc.id,
@@ -84,8 +84,7 @@ const Home = () => {
             })
     }
 
-    const incrementAllScore = () => {
-        console.log("hrere");   
+    const incrementAllScore = () => { 
         todoRef.get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               // Update the field for each document
@@ -110,14 +109,20 @@ const Home = () => {
             <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
-      <View>
-        <FontAwesome
-            name='plus'
-            color='red'
+      {todos && todos.length > 0 ? <View>
+        <Pressable 
+            style={styles.incrementAllContainer}
             onPress={() => incrementAllScore()}
-            style={styles.todoIcon}
-        />
-      </View>
+        >
+            <FontAwesome
+                name='plus'
+                color='red'
+                style={styles.incrementAllIcon}
+            />
+            <Text style={styles.allText}>ALL</Text>
+        </Pressable>
+      </View>: <></>}
+      
       <FlatList
             data={todos}
             numColumns={1}
@@ -139,18 +144,20 @@ const Home = () => {
                             </Text>
                         </View>
 
-                        <FontAwesome
-                            name='plus'
-                            color='red'
-                            onPress={() => incrementIndividualScore(item)}
-                            style={styles.todoIcon}
-                        />
 
-                        <View>
-                            <Text>
-                                {item.score}
-                            </Text>
-                        </View>
+                        <Text style={styles.scoreText}>
+                            {item.score}
+                        </Text>
+                        <Pressable
+                            style={styles.incrementEachIconContainer}
+                            onPress={() => incrementIndividualScore(item)}
+                        >
+                            <FontAwesome
+                                name='plus'
+                                color='red'
+                                style={styles.incrementEachIcon}
+                            />
+                        </Pressable>
                     </Pressable>
                 </View>
             )}
@@ -214,5 +221,38 @@ const styles = StyleSheet.create({
         marginTop:5,
         fontSize:20,
         marginLeft:14
+    },
+
+    incrementAllContainer:{
+        display:'flex',
+        flexDirection:'row',
+        marginLeft:'auto',
+        marginRight:20,
+    },
+
+    incrementAllIcon:{
+        marginTop:3,
+        fontSize:20,
+        marginLeft:14
+    },
+
+    allText:{
+        marginLeft:5,
+        fontSize:18,
+        
+    },
+    scoreText:{
+        marginLeft:'auto',
+        marginRight:40,
+        fontSize:20
+    },
+    incrementEachIconContainer:{
+        // backgroundColor:'black',
+        height:'100%',
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    incrementEachIcon:{
+        fontSize:30,
     }
 })
